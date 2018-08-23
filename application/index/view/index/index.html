@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <span  >Cut-off Date:</span>
+    <t t-if="cut_off_date">
+        <span style="margin-left:8px;display: inline-block;"><t t-esc="cut_off_date"/></span>
+    </t>
+    <span style="text-align : right" >Company:</span>
+    <t t-if="company_id">
+        <span style="margin-right:8px;display: inline-block;"><t t-esc="company_id"/></span>
+    </t>
+</div>
+</body>
+</html>
