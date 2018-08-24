@@ -56,6 +56,11 @@ class ProcessException extends BaseException
             'msg' => '用户不存在',
             'errorCode' => 50000,
         ],
+        'Forbidden' => [
+            'code' => 403,
+            'msg' => '暂无权限',
+            'errorCode' => 50000,
+        ],
     ];
 
 

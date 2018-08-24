@@ -10,6 +10,7 @@ namespace app\index\service;
 
 
 use app\exception\ProcessException;
+use app\library\enum\ScopeEnum;
 use think\Cache;
 use think\Request;
 
@@ -56,6 +57,26 @@ class Token
     {
         return self::getCurrentTokenVar('uid');
     }
+
+
+    public static function needScope($scopes=[])
+    {
+        $scope = self::getCurrentTokenVar('scope');
+
+        if ( !$scope ) {
+            throw new ProcessException('TokenMiss');
+        } else {
+            foreach ( $scopes as $key => $val ) {
+                if ( ScopeEnum::$val == $scope ) {
+                    return true;
+                }
+            }
+        }
+        throw new ProcessException('Forbidden');
+    }
+
+
+
 
 
 
