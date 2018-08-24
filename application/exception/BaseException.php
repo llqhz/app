@@ -13,7 +13,7 @@ use think\Exception;
 
 
 /**
- * 统一处理自定义异常 和 参数验证异常
+ * 统一处理自定义异常(数据查询结果未空) 和 参数验证异常
  * Class BaseException
  * @package app\exception
  */

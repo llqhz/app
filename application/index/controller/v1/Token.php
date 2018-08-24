@@ -14,13 +14,12 @@ use app\index\validate\TokenGet;
 
 class Token
 {
+    # 通过code获取自定义Token
     public function getToken($code = '')
     {
         (new TokenGet())->goCheck();
         $userToken = new UserToken();
         $token = $userToken->get($code);
-        return $token;
+        return json(['token'=>$token]);
     }
-
-
 }

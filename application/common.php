@@ -39,6 +39,7 @@ function json($data = [], $code = 200, $header = [], $options = [])
  * @param array $data
  * @param array $param
  * @return mixed
+ * @version v1.2.0
  */
 function httpCurl( $url='', $method='get', $resType='arr', $data=[] , $param=[]) {
     $urlarr = parse_url($url);
@@ -95,13 +96,16 @@ function httpCurl( $url='', $method='get', $resType='arr', $data=[] , $param=[])
     }
     curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);               // 加入header
 
-    $cookie = $param['cookie'] ?: '';
+    $cookie = isset($param['cookie']) ? $param['cookie'] : '';
     //设置cookie
     curl_setopt($ch,CURLOPT_COOKIE,$cookie);
     $cookie_dir = CACHE_PATH;
 
     $cookie_file = $cookie_dir.$host.'.txt';
     if ( !file_exists($cookie_file) ) {
+        if ( !file_exists($cookie_dir) ) {
+            mkdir($cookie_dir,0777,true);
+        }
         $fp = fopen($cookie_file,'wb');
         fclose($fp);
         chmod($cookie_file,0777);
@@ -116,6 +120,7 @@ function httpCurl( $url='', $method='get', $resType='arr', $data=[] , $param=[])
         curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
     }
     $str = curl_exec($ch);
+    $info = curl_getinfo($ch);
     curl_close($ch);
 
     if ( $resType == 'arr' ) {

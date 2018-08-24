@@ -10,6 +10,7 @@ namespace app\index\controller\v1;
 
 
 use app\exception\banner\BannerMissException;
+use app\exception\ProcessException;
 use app\index\model\Banner as BannerModel;
 use app\index\validate\IdMustBePositiveInt;
 use app\index\validate\TestValidate;
@@ -25,7 +26,7 @@ class Banner
         (new IdMustBePositiveInt())->goCheck();
         $banner = BannerModel::getBannerById($id);
         if ( !$banner ) {
-            throw new BannerMissException();
+            throw new ProcessException('BannerMiss');
         }
         return json($banner);
     }

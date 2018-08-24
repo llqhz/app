@@ -2,6 +2,7 @@
 
 namespace app\index\controller\v1;
 
+use app\exception\ProcessException;
 use app\exception\theme\ThemeMissException;
 use app\index\validate\IdCollection;
 use app\index\validate\IdMustBePositiveInt;
@@ -22,7 +23,7 @@ class Theme extends Controller
         $ids = explode(',',$ids);
         $themes = ThemeModel::with(['topicImg','headImg'])->select($ids);
         if ( $themes->isEmpty() ) {
-            throw new ThemeMissException();
+            throw new ProcessException('ThemeMiss');
         }
         return json($themes);
     }
@@ -40,7 +41,7 @@ class Theme extends Controller
         (new IdMustBePositiveInt())->goCheck();
         $theme = ThemeModel::getThemeWithProducts($id);
         if (!$theme) {
-            throw new ThemeMissException();
+            throw new ProcessException('ThemeMiss');
         }
         return json($theme);
     }

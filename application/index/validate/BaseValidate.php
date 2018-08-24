@@ -31,7 +31,6 @@ class BaseValidate extends Validate
                 'msg' => $this->error,
                 'errorCode' => '400002'
             ]);
-
         } else {
             return true;
         }

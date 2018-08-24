@@ -19,13 +19,6 @@ class Product extends BaseModel
         return $this->getImgUrl($value,$data);
     }
 
-    public function imgs()
-    {
-        return $this->hasMany('ProductImage','img_id','id');
-    }
-
-
-
     # 获取最近商品
     public static function getMostRecent($count)
     {
@@ -41,21 +34,5 @@ class Product extends BaseModel
             $query->where('category_id','=',$category_id);
         });
     }
-
-    public function getProductDetail($id)
-    {
-        $product = self::with(['imgs.imgUrl','propertities'])->find($id);
-        $product = self::with([
-                'imgs' => function($query){
-                    $query->with(['imgUrl'])
-                        ->order('order','asc');
-                }
-            ])
-            ->with(['propertities'])
-            ->find($id);
-        
-    }
-
-
 
 }

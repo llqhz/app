@@ -9,6 +9,7 @@
 namespace app\index\controller\v1;
 
 
+use app\exception\ProcessException;
 use app\exception\product\ProductMissException;
 use app\index\validate\CountValidate;
 use app\index\model\Product as ProductModel;
@@ -27,7 +28,7 @@ class Product
         (new CountValidate())->goCheck();
         $products = ProductModel::getMostRecent($count);
         if ( $products->isEmpty() ) {
-            throw new ProductMissException();
+            throw new ProcessException('ProductMiss');
         }
         // 隐藏数据集对象的summary字段
         # $products = collection($products);
@@ -42,34 +43,10 @@ class Product
         (new IdMustBePositiveInt())->goCheck();
         $products = ProductModel::getByCategoryId($id);
         if ( $products->isEmpty() ) {
-            throw new ProductMissException();
+            throw new ProcessException('ProductMiss');
         }
         $products->hidden(['summary']);
         return json($products);
     }
 
-    public function getOne($id)
-    {
-        
-    }
-
-    public function deleteOne()
-    {
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-

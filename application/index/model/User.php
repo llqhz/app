@@ -2,10 +2,13 @@
 
 namespace app\index\model;
 
-use think\Model;
-
-class User extends Model
+class User extends BaseModel
 {
-    //
+
+
+    public static function getByOpenId($openid='')
+    {
+        return self::where('openid','eq','openid')->find();
+    }
 
 }

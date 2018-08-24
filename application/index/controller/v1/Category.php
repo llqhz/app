@@ -9,6 +9,7 @@
 namespace app\index\controller\v1;
 
 use app\exception\category\CategoryMissException;
+use app\exception\ProcessException;
 use app\index\model\Category as CategoryModel;
 
 class Category
@@ -17,7 +18,7 @@ class Category
     {
         $categories = CategoryModel::all([],['img']);
         if ( $categories->isEmpty() ) {
-            throw new CategoryMissException();
+            throw new ProcessException('CategoryMiss');
         }
         return json($categories);
     }

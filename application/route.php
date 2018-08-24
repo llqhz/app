@@ -61,9 +61,7 @@ Route::get('index/:version/product/by_category/:id','index/:version.Product/getA
 Route::post('index/:version/token/user','index/:version.Token/getToken');
 
 
-Route::get('index/index','index/index',[],[
 
-]);
 
 
 
