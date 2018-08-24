@@ -11,18 +11,15 @@ namespace app\index\controller\v1;
 
 use app\index\controller\BaseController;
 use app\index\validate\OrderPlace;
+use app\index\service\Token as TokenService;
+use app\index\service\Order as OrderService;
 
 class Order extends BaseController
 {
 
     protected $beforeActionList = [
-        'checkExclusiveScope' => [ 'only'=>'placeOrder' ];
+        'checkExclusiveScope' => [ 'only'=>'placeOrder' ],
     ];
-
-
-
-
-
 
 
 
@@ -39,6 +36,7 @@ class Order extends BaseController
     public function placeOrder(){
         (new OrderPlace())->goCheck();
         $products = input("post.products/a");
+
         $uid = TokenService::getCurrentUid();
         $order = new OrderService();
         $status = $order->place($uid,$products);

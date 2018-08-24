@@ -28,15 +28,16 @@ class OrderPlace
         if (empty($values)) {
             throw new ProcessException([ "msg" => "商品列表不能为空"]);
         }
+
+        $validate = new BaseValidate($this->singleRule);
         foreach ($values as $key => $value) {
-            $this->checkProduct($value);
+            $this->checkProduct($value,$validate);
         }
         return true;
     }
 
 
-    protected function checkProduct($value){
-        $validate = new BaseValidate($this->singleRule);
+    protected function checkProduct($value,$validate){
         $res = $validate->check($value);
         if ( !$res ) {
             throw new ProcessException([ "msg" => "商品列表参数错误"]);
