@@ -9,6 +9,10 @@
 namespace app\index\service;
 
 
+use app\exception\ProcessException;
+use think\Cache;
+use think\Request;
+
 class Token
 {
     public static function generateToken()
@@ -18,4 +22,41 @@ class Token
         $salt = config('app.token_salt');
         return md5($token.$timestamp.$salt);
     }
+
+
+    /**
+     * 获取Token对应变量
+     * @param string $key
+     * @return mixed
+     * @throws ProcessException
+     */
+    public static function getCurrentTokenVar($key='')
+    {
+        $token = Request::instance()->header('token');
+        $vars = Cache::get($token);
+        if ( !$vars ) {
+            throw new ProcessException('TokenMiss');
+        }
+        if ( !is_array($vars) ) {
+            $vars = json_decode($vars,true);
+        }
+        if ( array_key_exists($key,$vars) ) {
+            return $vars[$key];
+        } else {
+            throw new ProcessException('TokenVarMiss');
+        }
+    }
+
+    /**
+     * 根据Header里面的Token获取uid
+     * @return mixed
+     * @throws ProcessException
+     */
+    public static function getCurrentUid()
+    {
+        return self::getCurrentTokenVar('uid');
+    }
+
+
+
 }

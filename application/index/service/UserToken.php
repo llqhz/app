@@ -16,13 +16,20 @@ use app\index\model\User as UserModel;
 
 class UserToken extends Token
 {
+    /**
+     * 获取用户令牌
+     * @param string $code
+     * @return string
+     * @throws Exception
+     * @throws ProcessException
+     */
     public function get($code='')
     {
         $app = new WxApp();
         $data = $app->login($code);
         if ( empty($data) ) {
             # 记录日志,并自动返回给客户端服务器内部错误
-            throw new Exception('通过httpcurl根据code获取openid失败');
+            throw new Exception('通过httpCurl根据code获取openid失败');
         }
         if ( array_key_exists('errcode',$data) ) {
             $this->loginError($data);
@@ -33,7 +40,12 @@ class UserToken extends Token
         return $this->grantToken($data);
     }
 
-
+    /**
+     * 组装Token数据
+     * @param array $data
+     * @return string
+     * @throws ProcessException
+     */
     public function grantToken($data=[])
     {
         // 通过openid判断是否存在决定产生token(缓存+db)并返回
@@ -53,8 +65,15 @@ class UserToken extends Token
         return $token;
     }
 
-
-    public function cacheToken($token,$data,$uid)
+    /**
+     * 缓存Token
+     * @param string $token
+     * @param array $data
+     * @param string $uid
+     * @return string
+     * @throws ProcessException
+     */
+    public function cacheToken($token='',$data=[],$uid='')
     {
         $data['uid'] = $uid;
         $data['scope'] = 16;
@@ -72,6 +91,11 @@ class UserToken extends Token
     }
 
 
+    /**
+     * 抛出登录错误的异常
+     * @param array $data
+     * @throws ProcessException
+     */
     public function loginError($data=[])
     {
         throw new ProcessException([

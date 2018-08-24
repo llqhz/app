@@ -41,6 +41,21 @@ class ProcessException extends BaseException
             'msg' => '请求分类不存在',
             'errorCode' => 50000,
         ],
+        'TokenMiss' => [
+            'code' => 404,
+            'msg' => 'Token无效',
+            'errorCode' => 50000,
+        ],
+        'TokenVarMiss' => [
+            'code' => 404,
+            'msg' => 'Token获取的变量无效',
+            'errorCode' => 50000,
+        ],
+        'UserMiss' => [
+            'code' => 404,
+            'msg' => '用户不存在',
+            'errorCode' => 50000,
+        ],
     ];
 
 
@@ -57,8 +72,5 @@ class ProcessException extends BaseException
         } elseif ( is_array($type) ) {
             parent::__construct($type);
         }
-
     }
-
-
 }
