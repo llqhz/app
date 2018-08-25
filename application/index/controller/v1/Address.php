@@ -20,7 +20,9 @@ use app\index\validate\AddressNew;
 class Address extends BaseController
 {
 
-    protected $beforeActionList = [];
+    protected $beforeActionList = [
+        
+    ];
 
 
     /**
