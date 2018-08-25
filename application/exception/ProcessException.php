@@ -61,6 +61,11 @@ class ProcessException extends BaseException
             'msg' => '暂无权限',
             'errorCode' => 50000,
         ],
+        'UserAddressMiss' => [
+            'code' => 404,
+            'msg' => '用户地址不存在',
+            'errorCode' => 60001,
+        ],
     ];
 
 
