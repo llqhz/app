@@ -10,6 +10,7 @@ namespace app\index\controller\v1;
 
 
 use app\exception\ProcessException;
+use app\exception\SuccessMessage;
 use app\index\controller\BaseController;
 use app\index\model\User as UserModel;
 use app\index\service\Token as TokenService;
@@ -21,7 +22,7 @@ class Address extends BaseController
 {
 
     protected $beforeActionList = [
-
+        "checkPrimaryScope" => ["only" => "createOrUpdateAddress,getUserAddress"]
     ];
 
 
@@ -58,13 +59,18 @@ class Address extends BaseController
         }
 
         # 准备数据
-
+        $data = $validate->getDataByRules(input('post.'));
 
         $userAddress = $user->address();
         if ( !$userAddress ) {
-            $user->address()->save($address);
+            # 关联新增  基于关联模型本身的新增
+            $user->address()->save($data);
+        } else {
+            # 关联更新  基于当前模型的属性的更新,保存与当前模型的状态
+            $user->address->save($data);
         }
 
+        return json(new SuccessMessage('更新成功'));
     }
     
     

@@ -10,6 +10,7 @@ namespace app\index\service;
 
 
 use app\exception\ProcessException;
+use app\library\enum\ScopeEnum;
 use think\Exception;
 use wechat\WxApp;
 use app\index\model\User as UserModel;
@@ -76,7 +77,7 @@ class UserToken extends Token
     public function cacheToken($token='',$data=[],$uid='')
     {
         $data['uid'] = $uid;
-        $data['scope'] = 16;
+        $data['scope'] = ScopeEnum::User;
         $expire_in = config('app.token_expire_in');
 
         $res = cache($token,$data,$expire_in);

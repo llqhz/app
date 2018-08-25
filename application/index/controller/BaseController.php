@@ -10,8 +10,27 @@ namespace app\index\controller;
 
 
 use think\Controller;
+use app\index\service\Token as TokenService;
 
 class BaseController extends Controller
 {
+    /**
+     * 用户和管理员都可以访问
+     * @return bool
+     * @throws \app\exception\ProcessException
+     */
+    public function checkPrimaryScope()
+    {
+        return TokenService::needScope(['User','Super']);
+    }
 
+    /**
+     * 只有用户可以访问
+     * @return bool
+     * @throws \app\exception\ProcessException
+     */
+    public function checkExclusiveScope()
+    {
+        return TokenService::needScope(['User']);
+    }
 }
