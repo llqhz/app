@@ -14,8 +14,8 @@ use app\exception\ProcessException;
 class Pay
 {
 
-    protected $orderId = '',
-    protected $orderNo = '',
+    protected $orderId = '';
+    protected $orderNo = '';
 
     public function __construct($order_id='')
     {
