@@ -51,6 +51,7 @@ class Order
         $order['pass'] = true;
 
         // 减少商品数量
+        // TODO....
 
         return json($order);
     }
@@ -64,7 +65,6 @@ class Order
     protected function createOrder ($snap=[]){
         Db::startTrans();
         try {
-
             $orderNo = AutoUid::makeNo('Order');
 
             $order = new OrderModel();
@@ -174,6 +174,22 @@ class Order
         }
 
         return $status;
+    }
+
+    /**
+     * 根据订单号，获取购买的商品和商品库存信息
+     * @param string $orderId
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function checkOrderStatus($orderId='')
+    {
+        # 根据orderId 找出用户买了什么
+        $this->oProducts = OrderProduct::where('order_id','=',$orderId)->select();
+        $this->products = $this->getProductsByOrder();
+        return $this->getOrderStatus();
     }
 
 

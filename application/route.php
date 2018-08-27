@@ -63,9 +63,17 @@ Route::get('index/:version/token/user','index/:version.Token/getToken');
 # 增加收货地址
 Route::post('index/:version/address','index/:version.Address/createOrUpdateAddress');
 
-# 订单下单
-Route::post('index/:version/order/place','index/:version.Order/placeOrder');
+# 订单
+Route::group('index/:version/order',function (){
+    # 下单
+    Route::get('/place','index/:version.Order/placeOrder');
+});
 
+# 支付
+Route::group('index/:version/pay',function (){
+    # 下单
+    Route::get('/pre_order/:id','index/:version.Pay/getPreOrder');
+});
 
 
 # 测试方法
