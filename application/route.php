@@ -58,8 +58,18 @@ Route::get('index/:version/category/all','index/:version.Category/getAllCategori
 Route::get('index/:version/product/by_category/:id','index/:version.Product/getAllByCategory');
 
 # 获取用户Token
-Route::post('index/:version/token/user','index/:version.Token/getToken');
+Route::get('index/:version/token/user','index/:version.Token/getToken');
 
+# 增加收货地址
+Route::post('index/:version/address','index/:version.Address/createOrUpdateAddress');
+
+# 订单下单
+Route::post('index/:version/order/place','index/:version.Order/placeOrder');
+
+
+
+# 测试方法
+Route::get('test/uid','index/index/testUid');
 
 
 

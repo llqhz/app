@@ -11,7 +11,7 @@ namespace app\index\validate;
 
 use app\exception\ProcessException;
 
-class OrderPlace
+class OrderPlace extends BaseValidate
 {
     protected $rule = [
         "products" => "checkProducts"

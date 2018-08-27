@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 
+use app\index\model\AutoUid;
 use think\Request;
 
 class Index
@@ -15,5 +16,11 @@ class Index
     {
         $id = $request->param('id');
         var_dump($id);
+    }
+
+    public function testUid()
+    {
+        $id = AutoUid::makeNo('Order');
+        dump($id);
     }
 }

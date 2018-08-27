@@ -13,8 +13,8 @@ use app\exception\ProcessException;
 use app\exception\SuccessMessage;
 use app\index\controller\BaseController;
 use app\index\model\User as UserModel;
-use app\index\service\Token as TokenService;
 use app\index\model\UserAddress as UserAddressMode;
+use app\index\service\Token as TokenService;
 use app\index\validate\AddressNew;
 
 
@@ -74,7 +74,7 @@ class Address extends BaseController
     }
 
 
-    
+
     
     
 }

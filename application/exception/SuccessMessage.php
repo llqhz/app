@@ -12,13 +12,13 @@ namespace app\exception;
 class SuccessMessage
 {
     // HTTP状态码
-    protected $code = 201;
+    public $code = 201;
 
     // 自定义的错误码
-    protected $errorCode = 0;
+    public $errorCode = 0;
 
     // 错误具体信息
-    protected $msg = '操作成功';
+    public $msg = '操作成功';
 
 
     public function __construct($msg='',$code=201)

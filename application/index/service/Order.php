@@ -10,8 +10,14 @@ namespace app\index\service;
 
 
 use app\exception\ProcessException;
+use app\index\model\AutoUid;
+use app\index\model\OrderProduct;
 use app\index\model\Product;
 use app\index\model\UserAddress;
+use app\index\model\Order as OrderModel;
+use think\Db;
+use think\Exception;
+
 
 class Order
 {
@@ -40,44 +46,82 @@ class Order
         // 生产订单快照
         $orderSnap = $this->snapOrder($status);
 
-        // 创建订单
+        // 开始创建订单
+        $order = $this->createOrder($orderSnap);
+        $order['pass'] = true;
 
+        // 减少商品数量
 
-
+        return json($order);
     }
 
-    protected static function createOrder (){
+    /**
+     * 写入订单信息，订单表，订单商品表
+     * @param array $snap
+     * @return array
+     * @throws \Exception
+     */
+    protected function createOrder ($snap=[]){
+        Db::startTrans();
+        try {
 
-    }
 
-    public static function makeOrderNo()
-    {
-        
+            $orderNo = AutoUid::makeNo('Order');
+
+            $order = new OrderModel();
+            $order->user_id = $this->uid;
+            $order->order_no = $orderNo;
+            $order->total_price = $snap['orderPrice'];  // 订单总金额
+            $order->total_count = $snap['totalCount'];  // 订单总个数
+            $order->snap_img = $snap['snapImg']; //
+            $order->snap_name = $snap['snapName']; //
+            $order->snap_address = $snap['snapAddress']; //
+            $order->snap_items = json_encode($snap['pStatus'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $order->user_id = $this->uid;
+
+            $order->save();
+
+            $orderId = $order->id;
+            $createTime = $order->create_time;
+
+            foreach ($this->oProducts as $key => $p) {
+                $this->oProducts[$key]['order_id'] = $orderId;
+            }
+            $orderProduct = new OrderProduct();
+            $orderProduct->saveAll($this->oProducts);
+            Db::commit();
+        } catch ( Exception $e ) {
+            Db::rollback();
+        }
+        return [
+            'order_no' => $orderNo,
+            'order_id' => $orderId,
+            'create_time' => $createTime,
+        ];
     }
 
 
     /**
-     * 生产订单快照
+     * 生成订单快照
      * @param array $status
      * @return array
      */
     public function snapOrder($status=[])
     {
         $snap = [
-            'orderPrice' => 0,
-            'totalCount' => 0,
-            'pStatus' => [],
-            'snapAddress' => null,
-            'snapName' => '',
-            'snapImg' => '',
+            'orderPrice' => 0,  // 订单总金额
+            'totalCount' => 0,  // 订单总数量
+            'pStatus' => [],    // 每个商品的状态
+            'snapAddress' => [],// 用户地址
+            'snapName' => '',   // 首个商品名
+            'snapImg' => '',    // 首个商品图
         ];
 
         $snap['orderPrice'] = $status['orderPrice'];
         $snap['totalCount'] = $status['totalCount'];
-        $snap['pStatus'] = $status['pStatusAddress'];
+        $snap['pStatus'] = $status['pStatusArray'];
         $snap['orderPrice'] = $status['orderPrice'];
-        $snap['orderPrice'] = $status['orderPrice'];
-        $snap['snapAddress'] = json_encode($this->getUserAddress);
+        $snap['snapAddress'] = json_encode($this->getUserAddress());
         // 取首图作为缩略图
         $snap['snapName'] = $this->products[0]['name'];
         if ( count($this->products) > 1  ) {
@@ -124,7 +168,7 @@ class Order
             if ( $pStatus['haveStock'] == false ) {
                 $status['pass'] = false;
             }
-            $status['orderPrice'] += $pStatus['total_price'];
+            $status['orderPrice'] += $pStatus['totalPrice'];
             $status['totalCount'] += $pStatus['count'];
 
             array_push($status['pStatusArray'],$pStatus);
@@ -191,7 +235,7 @@ class Order
         }
 
         $products = Product::all($pids)
-            ->visiable(['id','price','stock','name','main_img_url'])
+            ->visible(['id','price','stock','name','main_img_url'])
             ->toArray();
 
         return $products;

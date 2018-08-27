@@ -20,14 +20,5 @@ class TokenGet extends BaseValidate
         'code.isNotEmpty' => 'code码不能为空',
     ];
 
-    public function isNotEmpty($value,$data)
-    {
-        if ( empty($value) ) {
-            return false;
-        }
-        return true;
-    }
-
-
 
 }
