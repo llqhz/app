@@ -9,7 +9,9 @@
 namespace app\index\model;
 
 
-class UserAddress
+use think\Model;
+
+class UserAddress extends Model
 {
     # 每个user_address 只能属于一个user, 所以是belongsTo
 }
