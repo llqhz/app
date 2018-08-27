@@ -11,6 +11,7 @@ namespace app\index\service;
 
 use app\exception\ProcessException;
 use app\index\model\Product;
+use app\index\model\UserAddress;
 
 class Order
 {
@@ -28,7 +29,7 @@ class Order
         // oProducts 和 products 库存量对比
         $this->oProducts =  $oProducts;
         $this->uid = $uid;
-        $products = $this->getProductsByOrder($oProducts); // 查询数据库商品信息
+        $this->products = $this->getProductsByOrder($oProducts); // 查询数据库商品信息
 
         $status = $this->getOrderStatus();
         if ( $status['pass'] == false ) {
@@ -36,9 +37,71 @@ class Order
             return $status;
         }
 
-        // 开始创建订单
+        // 生产订单快照
+        $orderSnap = $this->snapOrder($status);
+
+        // 创建订单
 
 
+
+    }
+
+    protected static function createOrder (){
+
+    }
+
+    public static function makeOrderNo()
+    {
+        
+    }
+
+
+    /**
+     * 生产订单快照
+     * @param array $status
+     * @return array
+     */
+    public function snapOrder($status=[])
+    {
+        $snap = [
+            'orderPrice' => 0,
+            'totalCount' => 0,
+            'pStatus' => [],
+            'snapAddress' => null,
+            'snapName' => '',
+            'snapImg' => '',
+        ];
+
+        $snap['orderPrice'] = $status['orderPrice'];
+        $snap['totalCount'] = $status['totalCount'];
+        $snap['pStatus'] = $status['pStatusAddress'];
+        $snap['orderPrice'] = $status['orderPrice'];
+        $snap['orderPrice'] = $status['orderPrice'];
+        $snap['snapAddress'] = json_encode($this->getUserAddress);
+        // 取首图作为缩略图
+        $snap['snapName'] = $this->products[0]['name'];
+        if ( count($this->products) > 1  ) {
+            $snap['snapName'] .= ' 等';
+        }
+        $snap['snapImg'] = $this->products[0]['main_img_url'];
+
+        return $snap;
+    }
+
+
+    /**
+     * 获取用户地址
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    protected function getUserAddress(){
+        $userAddress = UserAddress::where('user_id','eq',$this->uid)->find();
+        if ( !$userAddress ) {
+            throw new ProcessException('UserAddressMiss');
+        }
+        return $userAddress->toArray();
     }
 
 
@@ -51,6 +114,7 @@ class Order
         $status = [
             'pass' => true,  // 是否检测成功
             'orderPrice' => 0,  // 订单总金额
+            'totalCount' => 0,  // 商品总数量
             'pStatusArray' => [],  // 订单包含商品详情
         ];
 
@@ -61,6 +125,7 @@ class Order
                 $status['pass'] = false;
             }
             $status['orderPrice'] += $pStatus['total_price'];
+            $status['totalCount'] += $pStatus['count'];
 
             array_push($status['pStatusArray'],$pStatus);
         }
