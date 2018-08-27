@@ -65,7 +65,6 @@ class Order
         Db::startTrans();
         try {
 
-
             $orderNo = AutoUid::makeNo('Order');
 
             $order = new OrderModel();
