@@ -9,10 +9,13 @@
 namespace app\library\enum;
 
 
-class ScopeEnum
+class ScopeEnum extends Enum
 {
+
+    # 用户
     const User = 16;
 
+    # 管理员
     const Super = 32;
 
 }

@@ -9,7 +9,7 @@
 namespace app\library\enum;
 
 
-class OrderStatusEnum
+class OrderStatusEnum extends Enum
 {
     # 待支付
     const UNPAID = 1;

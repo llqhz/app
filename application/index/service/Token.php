@@ -68,7 +68,7 @@ class Token
             throw new ProcessException('TokenMiss');
         } else {
             foreach ( $scopes as $key => $val ) {
-                if ( ScopeEnum::$val == $scope ) {
+                if ( ScopeEnum::get($val) == $scope ) {
                     return true;
                 }
             }

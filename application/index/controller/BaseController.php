@@ -9,11 +9,16 @@
 namespace app\index\controller;
 
 
+use app\index\controller\traits\Mended;
 use think\Controller;
 use app\index\service\Token as TokenService;
 
 class BaseController extends Controller
 {
+    // 调整控制器方法
+    use Mended;
+
+
     /**
      * 用户和管理员都可以访问
      * @return bool
@@ -33,4 +38,7 @@ class BaseController extends Controller
     {
         return TokenService::needScope(['User']);
     }
+
+
+
 }

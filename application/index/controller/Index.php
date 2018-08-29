@@ -15,13 +15,13 @@ class Index extends BaseController
 
     public function index($id='0',$name='xiao')
     {
-        echo ' index ';
+        echo ScopeEnum::get('User');
     }
 
 
     public function hello()
     {
-        echo ' hello ';
+        //echo ' hello ';
     }
 
     public function testUid()
