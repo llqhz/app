@@ -20,9 +20,18 @@ class Pay extends BaseController
     ];
 
 
+
+
+    # 下单接口生成预订单
     public function getPreOrder($id='')
     {
         (new IdMustBePositiveInt())->goCheck();
 
+    }
+
+    # 微信异步通知接口
+    public function receiveNotify()
+    {
+        
     }
 }

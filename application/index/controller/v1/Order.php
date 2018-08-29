@@ -9,17 +9,54 @@
 namespace app\index\controller\v1;
 
 
+use app\exception\ProcessException;
 use app\index\controller\BaseController;
+use app\index\validate\IdMustBePositiveInt;
 use app\index\validate\OrderPlace;
 use app\index\service\Token as TokenService;
 use app\index\service\Order as OrderService;
+use app\index\validate\PagingParameter;
+use app\index\model\Order as OrderModel;
 
 class Order extends BaseController
 {
 
     protected $beforeActionList = [
-        'checkExclusiveScope' => [ 'only'=>'placeOrder' ],
+        'checkExclusiveScope' => [ 'only'=>['placeOrder'] ],
+        'checkPrimaryScope' => [ 'only'=> ['getSummaryByUser','getDetail'] ],
     ];
+
+    # 获取用户订单列表
+    public function getSummaryByUser($page=1, $size=15)
+    {
+        (new PagingParameter())->goCheck();
+        $uid = TokenService::getCurrentUid();
+        $pages = OrderModel::getSummaryByUser($uid,$page,$size);
+        if ( $pages->isEmpty() ) {
+            return json([
+                'data' => [],
+                'current_page' => $pages->currentPage(),
+            ]);
+        } else {
+            //return json(get_class_methods($pages));
+            $data = $pages->getCollection()->hidden(['snap_items','snap_address','prepay_id'])->toArray();
+            return json([
+                'data' => $data,
+                'current_page' => $pages->currentPage(),
+            ]);
+        }
+    }
+
+    # 获取订单详情
+    public function getDetail($id='')
+    {
+        (new IdMustBePositiveInt())->goCheck();
+        $orderDetail = OrderModel::get($id);
+        if ( !$orderDetail ) {
+            throw new ProcessException('OrderMiss');
+        }
+        return json($orderDetail->hidden(['prepary_id']));
+    }
 
 
 

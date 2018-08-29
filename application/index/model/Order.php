@@ -20,5 +20,14 @@ class Order extends BaseModel
     protected $updateTime = 'update_time';
     protected $dateFormat = 'Y-m-d H:i:s';
 
+    # 订单列表分页
+    public static function getSummaryByUser($uid,$page=1,$size=15)
+    {
+        $pageData = self::where('user_id','=',$uid)
+            ->order('create_time desc')
+            ->paginate($size,true,['page'=>$page]);
+        return $pageData;
+    }
+
 
 }

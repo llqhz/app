@@ -12,6 +12,7 @@ namespace app\index\service;
 use app\exception\ProcessException;
 use app\library\enum\ScopeEnum;
 use think\Cache;
+use think\Exception;
 use think\Request;
 
 class Token
@@ -73,6 +74,20 @@ class Token
             }
         }
         throw new ProcessException('Forbidden');
+    }
+
+
+    public static function isValidOperate( $uid = '' )
+    {
+        if ( !$uid ) {
+            # 代码错误抛出think异常
+            throw new Exception(['msg'=>'缺少uid参数']);
+        }
+        $currentOperateUid = self::getCurrentUid();
+        if ( !$uid == $currentOperateUid ) {
+            return false;
+        }
+        return true;
     }
 
 

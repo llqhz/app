@@ -2,20 +2,26 @@
 namespace app\index\controller;
 
 use app\index\model\AutoUid;
+use app\library\enum\ScopeEnum;
+use think\Controller;
 use think\Request;
 
-class Index
+class Index extends BaseController
 {
+
+    protected $beforeActionList = [
+        'hello' => [ 'only'=> ['index'] ],
+    ];
+
     public function index($id='0',$name='xiao')
     {
-        return 'hello '.$id.'name :'.$name;
+        echo ' index ';
     }
 
 
-    public function hello(Request $request)
+    public function hello()
     {
-        $id = $request->param('id');
-        var_dump($id);
+        echo ' hello ';
     }
 
     public function testUid()

@@ -67,6 +67,10 @@ Route::post('index/:version/address','index/:version.Address/createOrUpdateAddre
 Route::group('index/:version/order',function (){
     # 下单
     Route::get('/place','index/:version.Order/placeOrder');
+    # 获取用户订单列表
+    Route::get('/by_user','index/:version.Order/getSummaryByUser');
+    # 获取用户订单详情
+    Route::get('/:id','index/:version.Order/getDetail',[],['id'=>'\d+']);
 });
 
 # 支付
