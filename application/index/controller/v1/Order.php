@@ -38,7 +38,6 @@ class Order extends BaseController
                 'current_page' => $pages->currentPage(),
             ]);
         } else {
-            //return json(get_class_methods($pages));
             $data = $pages->getCollection()->hidden(['snap_items','snap_address','prepay_id'])->toArray();
             return json([
                 'data' => $data,

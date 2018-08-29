@@ -42,11 +42,15 @@ Route::any();
 # 获取banner
 Route::get('index/:version/banner/:id','index/:version.Banner/getBanner');
 
-# 获取主题及主题商品
-Route::get('index/:version/themes','index/:version.Theme/getSimpleList');
+# 获取主题信息
+Route::group('index/:version/theme',function(){
+    # 获取主题+主题商品详情
+    Route::get('/:id','index/:version.Theme/getComplexOne',[],['id'=>'\d+']);
 
-# 获取主题+主题商品详情
-Route::get('index/:version/theme/:id','index/:version.Theme/getComplexOne');
+    # 获取主题及主题商品
+    Route::get('/','index/:version.Theme/getSimpleList');
+});
+
 
 # 获取最近商品详情
 Route::get('index/:version/product/recent','index/:version.product/getRecent');

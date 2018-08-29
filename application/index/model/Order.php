@@ -30,4 +30,22 @@ class Order extends BaseModel
     }
 
 
+    # 读取器/修改器
+    public function getSnapItemsAttr ( $value='' ) {
+        if ( empty($value) ) {
+            return '';
+        } else {
+            return json_decode($value,true);
+        }
+    }
+
+    public function getSnapAddressAttr ( $value='' ) {
+        if ( empty($value) ) {
+            return '';
+        } else {
+            return json_decode($value,true);
+        }
+    }
+
+
 }
