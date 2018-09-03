@@ -24,11 +24,11 @@ use think\Route;
 # Route::rule('路由表达式','路由地址','请求类型','路由参数(数组)','变量规则(数组)');
 
 # 请求类型 [get,post,put,delete,*]
-
 # 路由参数
 
 
 // Route::rule('hello','index/index/index','get|post',['https'=>false]);
+
 /*
 Route::get();
 Route::post();
