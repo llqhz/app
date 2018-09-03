@@ -19,6 +19,18 @@ class Product extends BaseModel
         return $this->getImgUrl($value,$data);
     }
 
+    # 定义关联 属性
+    public function properties()
+    {
+        return $this->hasMany('ProductProperty', 'product_id', 'id');
+    }
+    #定义关联 图片
+    public function imgs()
+    {
+        return $this->hasMany('ProductImage','product_id','id');
+    }
+
+
     # 获取最近商品
     public static function getMostRecent($count)
     {
@@ -33,6 +45,18 @@ class Product extends BaseModel
         return self::all(function($query) use ($category_id) {
             $query->where('category_id','=',$category_id);
         });
+    }
+
+
+    public static function getDetail($id='')
+    {
+        return self::with(['properties'])
+            ->with(['imgs'=>function($query){
+                $query->with('imgUrl')
+                    ->order('order','asc');
+                    # 排序是对当前$query的排序而不是关联后的排序
+            }])
+            ->find($id);
     }
 
 }

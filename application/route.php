@@ -52,14 +52,23 @@ Route::group('index/:version/theme',function(){
 });
 
 
-# 获取最近商品详情
-Route::get('index/:version/product/recent','index/:version.product/getRecent');
+# 获取商品信息
+Route::group('index/:version/product',function(){
+    # 获取商品详情
+    Route::get('/:id','index/:version.Product/getDetail',[],['id'=>'\d+']);
+
+    # 获取最近商品详情
+    Route::get('/recent','index/:version.product/getRecent');
+
+    # 获取分类的商品信息
+    Route::get('/by_category/:id','index/:version.Product/getAllByCategory');
+});
+
+
 
 # 获取分类列表
 Route::get('index/:version/category/all','index/:version.Category/getAllCategories');
 
-# 获取分类的商品信息
-Route::get('index/:version/product/by_category/:id','index/:version.Product/getAllByCategory');
 
 # 获取用户Token
 Route::get('index/:version/token/user','index/:version.Token/getToken');
@@ -87,6 +96,13 @@ Route::group('index/:version/pay',function (){
 # 测试方法
 Route::get('test/uid','index/index/testUid');
 
+Route::group('/',function (){
+    Route::any('',function(){
+        return json(['msg'=>'404 bad request'],404);
+    },['ajax'=>true]);
+
+    Route::any('','/404.html');
+});
 
 
 

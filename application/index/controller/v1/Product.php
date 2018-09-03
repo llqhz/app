@@ -49,4 +49,15 @@ class Product
         return json($products);
     }
 
+
+    public function getDetail($id='')
+    {
+        (new IdMustBePositiveInt())->goCheck();
+        $product = ProductModel::getDetail($id);
+        if ( !$product ) {
+            throw new ProcessException('ProductMiss');
+        }
+        return json($product);
+    }
+
 }
