@@ -42,7 +42,7 @@ class ProcessException extends BaseException
             'errorCode' => 50000,
         ],
         'TokenMiss' => [
-            'code' => 404,
+            'code' => 401,  // 触发主动更新token
             'msg' => 'Token无效',
             'errorCode' => 50000,
         ],
