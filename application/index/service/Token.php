@@ -90,6 +90,19 @@ class Token
         return true;
     }
 
+    public static function verifyToken($token='') {
+        if ( Cache::get($token) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
+
+
 
 
 

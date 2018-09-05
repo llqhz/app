@@ -9,8 +9,10 @@
 namespace app\index\controller\v1;
 
 
+use app\exception\ProcessException;
 use app\index\service\UserToken;
 use app\index\validate\TokenGet;
+use app\index\service\Token as TokenService;
 
 class Token
 {
@@ -22,4 +24,13 @@ class Token
         $token = $userToken->get($code);
         return json(['token'=>$token]);
     }
+
+    # 校验Token
+    public function verifyToken($token=''){
+        if ( !$token ) {
+            throw new ProcessException('TokenMiss');
+        }
+        return json(['isValid'=>TokenService::verifyToken($token)]);
+    }
+
 }

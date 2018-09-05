@@ -85,9 +85,19 @@ class BaseValidate extends Validate
      * 是否手机号
      */
     protected function isMobile( $value ){
-        $rule = "^1(3|4|5|7|8)[0-9]\d{8}$^";
+        $rule = "/^1(3|4|5|7|8)\d{9}$/";
         $result = preg_match($rule,$value);
         if ( $result ) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    protected function isTelephone( $value ) {
+        $rule = "/^\d{3,4}\-\d{7,8}$/";
+        $result = preg_match($rule,$value);
+        if ( $result || $this->isMobile($value) ) {
             return true;
         }else{
             return false;

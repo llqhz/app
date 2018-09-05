@@ -70,8 +70,15 @@ Route::group('index/:version/product',function(){
 Route::get('index/:version/category/all','index/:version.Category/getAllCategories');
 
 
-# 获取用户Token
-Route::get('index/:version/token/user','index/:version.Token/getToken');
+# Token
+Route::group('index/:version/token',function (){
+    # 验证token是否有效 // post增加安全性
+    Route::post('/user/verify','index/:version.Token/verifyToken');
+
+    # 获取用户Token
+    Route::get('/user','index/:version.Token/getToken');
+});
+
 
 # 增加收货地址
 Route::post('index/:version/address','index/:version.Address/createOrUpdateAddress');
@@ -101,7 +108,7 @@ Route::group('/',function (){
         return json(['msg'=>'404 bad request'],404);
     },['ajax'=>true]);
 
-    Route::any('','/404.html');
+    //Route::any('','/404.html');
 });
 
 
