@@ -79,14 +79,20 @@ Route::group('index/:version/token',function (){
     Route::get('/user','index/:version.Token/getToken');
 });
 
+# 收货地址
+Route::group('index/:version/address',function (){
+    # 增加收货地址
+    Route::post('/','index/:version.Address/createOrUpdateAddress');
+    # 获取收货地址
+    Route::get('/','index/:version.Address/getUserAddress');
+});
 
-# 增加收货地址
-Route::post('index/:version/address','index/:version.Address/createOrUpdateAddress');
+
 
 # 订单
 Route::group('index/:version/order',function (){
     # 下单
-    Route::get('/place','index/:version.Order/placeOrder');
+    Route::post('/place','index/:version.Order/placeOrder');
     # 获取用户订单列表
     Route::get('/by_user','index/:version.Order/getSummaryByUser');
     # 获取用户订单详情

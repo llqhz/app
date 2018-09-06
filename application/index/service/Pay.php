@@ -14,6 +14,7 @@ use app\index\service\Order as OrderService;
 use app\index\model\Order as OrderModel;
 use app\library\enum\OrderStatusEnum;
 use think\Loader;
+use wechat\WxApp;
 
 # 加载没有命名空间的类
 Loader::import('wechat.lib.WxPay',EXTEND_PATH,'.Api.php');
@@ -24,18 +25,18 @@ import('path.to.className','baseUrl','.ext');
 class Pay
 {
 
-    protected $orderId = '';
-    protected $orderNo = '';
+    protected $orderId = '';   // 订单id
+    protected $orderNo = '';   // 订单号
 
     public function __construct($order_id='')
     {
         if ( empty($order_id) ) {
             throw new ProcessException([ 'msg'=>'订单号不允许为空']);
         }
-        
+        $this->orderId = $order_id;
     }
     
-    
+    // 检测订单是否有效,并返回支付参数
     public function pay ( $id = '' ) {
         # 订单号是否存在
         # 订单号和用户是否匹配
@@ -46,15 +47,39 @@ class Pay
         $order = new OrderService();
         $status = $order->checkOrderStatus($this->orderId);
         if ( !$status['pass'] ) {
-            return $status;
-        } else {
-
+            return $status;  // 库存量检测失败
         }
+        return $this->makeWxPreOrder($status['orderPrice']);
     }
 
-    protected function makeWxPreOrder() {
+    // 生成预订单,返回支付参数
+    protected function makeWxPreOrder($totalPrice=0) {
         $openid = Token::getCurrentTokenVar('openid');
+        if ( !$openid ) {
+            throw new ProcessException('TokenMiss');
+        }
 
+        // 生成支付参数
+        $wxapp = new WxApp('app');
+        /*
+         * @param  array  $config => body,          商品描述
+         *                           out_trade_no,  商户订单号
+         *                           total_fee,     支付金额
+         *                           notify_url,    回调通知地址
+         *                           openid,        用户openid
+         */
+        $config = [
+            'body' => '商品描述',
+            'out_trade_no' => $this->orderNo,
+            'total_fee' => $totalPrice,
+            'openid' => $openid
+        ];
+        list($code,$res) = $wxapp->wxpay($config);
+        if ( $code == 1 ) {
+            return $res;
+        } else {
+            throw new ProcessException(['msg'=>$res]);
+        }
     }
 
 
@@ -67,7 +92,7 @@ class Pay
         }
 
         # 订单号和用户是否匹配
-        if ( !Token::isValidOperate($order->uid) ) {
+        if ( !Token::isValidOperate($order->id) ) {
             throw new ProcessException(['msg'=>'订单与用户不匹配']);
         }
 

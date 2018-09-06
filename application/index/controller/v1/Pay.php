@@ -9,8 +9,12 @@
 namespace app\index\controller\v1;
 
 
+use app\exception\ProcessException;
 use app\index\controller\BaseController;
 use app\index\validate\IdMustBePositiveInt;
+use app\index\model\Order as OrderModel;
+use app\index\service\Pay as PayService;
+
 
 class Pay extends BaseController
 {
@@ -26,6 +30,8 @@ class Pay extends BaseController
     public function getPreOrder($id='')
     {
         (new IdMustBePositiveInt())->goCheck();
+        $pay = new PayService($id);
+        $res = $pay->pay();
 
     }
 

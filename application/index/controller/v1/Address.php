@@ -32,8 +32,8 @@ class Address extends BaseController
      */
     public function getUserAddress()
     {
-        $uid = TokenService::getCurrentVars('uid');
-        $userAddress = UserAddressMode::where('uid','eq',$uid)->find();
+        $uid = TokenService::getCurrentTokenVar('uid');
+        $userAddress = UserAddressMode::where('id','eq',$uid)->find();
         if ( !$userAddress ) {
             throw new ProcessException('UserAddressMiss');
         }

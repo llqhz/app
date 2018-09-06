@@ -90,7 +90,7 @@ function httpCurl( $url='', $method='get', $resType='arr', $data=[] , $param=[])
     );
     // 设置header
     if ( isset($param['header']) ) {
-        foreach ($param['header'] as $key => $hd) {
+        foreach ($param['header'] as $hd) {
             array_push($header,$hd);
         }
     }
