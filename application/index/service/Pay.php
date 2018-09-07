@@ -22,6 +22,7 @@ Loader::import('wechat.lib.WxPay',EXTEND_PATH,'.Api.php');
 //     extend/wechat/lib/WxPay.Api.php
 import('path.to.className','baseUrl','.ext');
 
+
 class Pay
 {
 
@@ -40,7 +41,7 @@ class Pay
     public function pay ( $id = '' ) {
         # 订单号是否存在
         # 订单号和用户是否匹配
-        # 订单没有被支付
+        # 订单没有被支付 (用status字段状态标识)
         # 库存量检测
         $this->checkOrderValid();
 
@@ -102,6 +103,29 @@ class Pay
         }
 
         $this->orderNo = $order->order_no;
+        return true;
+    }
+
+
+    public function m_success(){
+        // 通知客户端支付成功
+        // 减少商品库存
+        // 更改支付状态
+        $order = OrderModel::with(['items.product'])->find($this->orderId);
+        if (!$order ) {
+            throw new ProcessException('OrderMiss');
+        }
+        $stockStatus = true;
+        $items = $order->items;
+        foreach ($items as $index => $item) {
+            if ( $item->count > $item->product->stock ) {
+                $stockStatus = false;
+                $item->product->stock -= $item->count;
+                $item->product->save();
+            }
+        }
+        $order->status = $stockStatus ? 2 : 4;
+        $order->save();
         return true;
     }
 

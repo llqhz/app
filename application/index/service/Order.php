@@ -40,7 +40,7 @@ class Order
         $status = $this->getOrderStatus();
         if ( $status['pass'] == false ) {
             $status['order_id'] = -1;
-            return $status;
+            return json($status);
         }
 
         // 生产订单快照
@@ -227,8 +227,9 @@ class Order
         $pStatus['id'] = $product['id'];
         $pStatus['count'] = $oCount;
         $pStatus['name'] = $product['name'];
-        $pStatus['totalPrice'] = $oCount * $product['price'];
-
+        $pStatus['totalPrice'] = $oCount * $product['price'];  // 总价格
+        $pStatus['main_img_url'] = $product['main_img_url'];  // 前端展示
+        $pStatus['price'] = $product['price'];  // 前端展示的商品单价
         if ( $product['stock'] >= $oCount ) {
             // 有库存
             $pStatus['haveStock'] = true ;

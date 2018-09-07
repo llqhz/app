@@ -32,7 +32,7 @@ class Pay extends BaseController
         (new IdMustBePositiveInt())->goCheck();
         $pay = new PayService($id);
         $res = $pay->pay();
-        
+
 
     }
 
@@ -40,5 +40,15 @@ class Pay extends BaseController
     public function receiveNotify()
     {
         
+    }
+
+
+    # 模拟支付成功异步通知
+    public function m_success(){
+        (new IdMustBePositiveInt())->goCheck();
+        $id = input('id');  // 订单id
+        $Pay = new PayService($id);
+        $flag = $Pay->m_success();
+        return xml(['ERRCODE'=>'SUCCESS']);
     }
 }

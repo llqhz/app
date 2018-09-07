@@ -11,5 +11,8 @@ namespace app\index\model;
 
 class OrderProduct extends BaseModel
 {
-
+    public function product()
+    {
+        return $this->belongsTo('Product','product_id','id');
+    }
 }

@@ -20,6 +20,19 @@ class Order extends BaseModel
     protected $updateTime = 'update_time';
     protected $dateFormat = 'Y-m-d H:i:s';
 
+    # 根据订单查找商品
+    public function products()
+    {
+        return $this->belongsToMany('Product','OrderProduct','product_id','order_id');
+    }
+
+    # 查找购买的数量
+    public function items()
+    {
+        return $this->hasMany('OrderProduct','order_id','id');
+    }
+
+
     # 订单列表分页
     public static function getSummaryByUser($uid,$page=1,$size=15)
     {

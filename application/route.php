@@ -103,6 +103,9 @@ Route::group('index/:version/order',function (){
 Route::group('index/:version/pay',function (){
     # 下单
     Route::get('/pre_order/:id','index/:version.Pay/getPreOrder');
+
+    # 模拟支付成功
+    Route::any('/m_success','index/:version.Pay/m_success');
 });
 
 
