@@ -66,6 +66,11 @@ class ProcessException extends BaseException
             'msg' => '用户地址不存在',
             'errorCode' => 60001,
         ],
+        'OrderBeenPaid' => [
+            'code' => 202,
+            'msg' => '订单已支付',
+            'errorCode' => 50001,
+        ]
     ];
 
 

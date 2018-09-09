@@ -87,7 +87,7 @@ class Pay
     # 检测订单
     protected function checkOrderValid(){
         # 订单号是否存在
-        $order = OrderModel::get($this->orderId);
+        $order = OrderModel::find($this->orderId);
         if ( !$order ) {
             throw new ProcessException('OrderMiss');
         }
@@ -99,7 +99,7 @@ class Pay
 
         # 订单是否被支付
         if ( $order->status != OrderStatusEnum::UNPAID ) {
-            throw new ProcessException(['msg'=>'订单已经支付']);
+            throw new ProcessException('OrderBeenPaid');
         }
 
         $this->orderNo = $order->order_no;

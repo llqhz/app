@@ -33,7 +33,7 @@ class Address extends BaseController
     public function getUserAddress()
     {
         $uid = TokenService::getCurrentTokenVar('uid');
-        $userAddress = UserAddressMode::where('id','eq',$uid)->find();
+        $userAddress = UserAddressMode::where('user_id','eq',$uid)->find();
         if ( !$userAddress ) {
             throw new ProcessException('UserAddressMiss');
         }
@@ -53,7 +53,7 @@ class Address extends BaseController
         $validate->goCheck();
 
         $uid = TokenService::getCurrentUid();
-        $user = UserModel::get($uid);
+        $user = UserModel::with('address')->find($uid);
         if ( !$user ) {
             throw new ProcessException('UserMiss');
         }
@@ -61,7 +61,7 @@ class Address extends BaseController
         # 准备数据
         $data = $validate->getDataByRules(input('post.'));
 
-        $userAddress = $user->address();
+        $userAddress = $user->address;
         if ( !$userAddress ) {
             # 关联新增  基于关联模型本身的新增
             $user->address()->save($data);

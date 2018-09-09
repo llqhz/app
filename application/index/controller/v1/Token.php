@@ -13,6 +13,7 @@ use app\exception\ProcessException;
 use app\index\service\UserToken;
 use app\index\validate\TokenGet;
 use app\index\service\Token as TokenService;
+use think\Request;
 
 class Token
 {
@@ -26,11 +27,17 @@ class Token
     }
 
     # 校验Token
-    public function verifyToken($token=''){
+    public function verifyToken(){
+        $request = Request::instance();
+        $token = $request->param('token');
         if ( !$token ) {
+            $h_token = $token = $request->header('token');
+        }
+        $status = TokenService::verifyToken($token);
+        if ( (!$status) && $h_token  ) {
             throw new ProcessException('TokenMiss');
         }
-        return json(['isValid'=>TokenService::verifyToken($token)]);
+        return json(['isValid'=>$status]);
     }
 
 }
